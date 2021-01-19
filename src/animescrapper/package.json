@@ -1,0 +1,19 @@
+{
+  "name": "animescrapper",
+  "version": "1.0.0",
+  "description": "An anime scrapper for retrieve and store updates",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "anime"
+  ],
+  "author": "dev4l3x",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "jsdom": "^16.4.0"
+  }
+}
