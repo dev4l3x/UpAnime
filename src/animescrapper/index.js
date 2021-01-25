@@ -4,11 +4,7 @@ const {JSDOM} = jsdom;
 
 
 
-// axios.get("https://www3.animeflv.net").then((response) => {
-//     const dom = new JSDOM(response.data);
-//     //console.log(response.data);
-//     console.log(dom.window.document.getElementsByClassName("Top")[0].children[0].textContent);
-// })
+
 
 //div(.Top&.fa-icon)>strong
 class TerminalExpression{
@@ -26,16 +22,27 @@ class TerminalExpression{
 class SearchExpression{
     #htmlLabel;
     #classes = [];
-    #ids = [];
+    #id;
 
-    constructor(label, classes, ids){
+    constructor(label, classes, id){
         this.#htmlLabel = label;
         this.#classes = classes;
-        this.#ids = ids;
+        this.#id = id;
     }
 
     interpret(context){
-
+        var dom = context.current;
+        var elements = dom.getElementsByClassName('Top');
+        for(let element of elements){
+            let hasClasses = this.#classes.every((elem) => element.classList.contains(elem));
+            if(hasClasses === true){
+                console.log(true);
+            }
+            let hasId = element.id === this.#id;
+            if(hasClasses && hasId){
+                context.current = element;
+            }
+        }
     }
 
 }
@@ -50,17 +57,17 @@ class Parser{
                 let label = semiQuery.replace(args, '');
                 args = args.replace(/[\(\)]/g, '');
                 let splittedArguments = args.split('&');
-                let ids = [];
+                let id = '';
                 let classes = [];
 
                 for(let argument of splittedArguments){
                     if(argument.startsWith('.'))
-                        classes.push(argument);
+                        classes.push(argument.replace('.', ''));
                     else
                         ids.push(argument);
                 }
 
-                expression.push(new SearchExpression(label, classes, ids));
+                expression.push(new SearchExpression(label, classes, id));
             }
 
             else{
@@ -68,13 +75,36 @@ class Parser{
             }
         }
 
-        return expression;
+        let expressions = {
+            interpret: function(context){
+                for(let e of expression){
+                    e.interpret(context);
+                }
+                return context.current;
+            }
+        }
+
+        return expressions;
     }
 }
 
-var parser = new Parser();
-var expression = parser.parse('div(.Top&.fa-icon)>strong');
-console.log(expression);
+// var parser = new Parser();
+// var expression = parser.parse('div(.Top&.fa-icon)>strong');
+// console.log(expression);
+
+axios.get("https://www3.animeflv.net").then((response) => {
+    const dom = new JSDOM(response.data);
+    context = {
+        current: dom.window.document
+    };
+
+    var parser = new Parser();
+    var expression = parser.parse('div(.Top)>strong');
+    
+    expression.interpret(context);
+
+    console.log(dom.window.document.getElementsByClassName("Top")[0].children[0].textContent);
+})
 
 class Scrapper {
 
