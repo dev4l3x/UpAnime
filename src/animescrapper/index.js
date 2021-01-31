@@ -1,46 +1,11 @@
-const axios = require('axios');
-const jsdom = require('jsdom');
-const cheerio = require('cheerio');
-const {JSDOM} = jsdom;
-const AnimeEpisode = require('./domain/animeEpisode');
+const FetchAnime = require('./application/fetchNewAnimes');
+const FlvScrapper = require('./infraestructure/animeflvscrapper');
+const AnimeRepository = require('./infraestructure/database/inMemoryAnimeService');
 
 
-axios.get("https://www3.animeflv.net").then((response) => {
-    const dom = new JSDOM(response.data);
+const fetch = new FetchAnime(new FlvScrapper(), new AnimeRepository());
 
-    const $ = cheerio.load(response.data);
-
-    var childs = $('ul.ListEpisodios li a');
-
-    var animes = [];
-
-    for(let child of childs){
-        var url = child.attribs['href'];
-        var info = child.children;
-        var episodeNumber = info.find(c => 'attribs' in c && c.attribs['class'] === 'Capi').children[0].data;
-        var animeName = info.find(c => 'attribs' in c && c.attribs['class'] === 'Title').children[0].data;
-        animes.push(new AnimeEpisode(animeName, episodeNumber, `https://www3.animeflv.net${url}`));
-    }
-
-    console.log(animes);
-
-})
-
-class Scrapper {
-
-    #content;
-    #dom;
-
-    Scrapper(htmlContent){
-        this.#content = htmlContent;
-        this.#dom = new JSDOM(htmlContent);
-    }
-
-    #getElementsByQuery(query){
-        
-    }
-
-}
+fetch.fetch();
 
 
 
