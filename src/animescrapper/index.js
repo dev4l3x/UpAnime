@@ -1,109 +1,29 @@
 const axios = require('axios');
 const jsdom = require('jsdom');
+const cheerio = require('cheerio');
 const {JSDOM} = jsdom;
+const AnimeEpisode = require('./domain/animeEpisode');
 
-
-
-
-
-//div(.Top&.fa-icon)>strong
-class TerminalExpression{
-    #htmlLabel;
-
-    constructor(label){
-        this.#htmlLabel = label;
-    }
-    
-    interpret(context){
-
-    }
-}
-
-class SearchExpression{
-    #htmlLabel;
-    #classes = [];
-    #id;
-
-    constructor(label, classes, id){
-        this.#htmlLabel = label;
-        this.#classes = classes;
-        this.#id = id;
-    }
-
-    interpret(context){
-        var dom = context.current;
-        var elements = dom.getElementsByClassName('Top');
-        for(let element of elements){
-            let hasClasses = this.#classes.every((elem) => element.classList.contains(elem));
-            if(hasClasses === true){
-                console.log(true);
-            }
-            let hasId = element.id === this.#id;
-            if(hasClasses && hasId){
-                context.current = element;
-            }
-        }
-    }
-
-}
-
-class Parser{
-    parse(query){
-        let expression = [];
-        let splittedQuery = query.split('>');
-        for(let semiQuery of splittedQuery){
-            if(semiQuery.includes('(')){
-                let args = semiQuery.match(/\(.*\)/g)[0];
-                let label = semiQuery.replace(args, '');
-                args = args.replace(/[\(\)]/g, '');
-                let splittedArguments = args.split('&');
-                let id = '';
-                let classes = [];
-
-                for(let argument of splittedArguments){
-                    if(argument.startsWith('.'))
-                        classes.push(argument.replace('.', ''));
-                    else
-                        ids.push(argument);
-                }
-
-                expression.push(new SearchExpression(label, classes, id));
-            }
-
-            else{
-                expression.push(new TerminalExpression(semiQuery));
-            }
-        }
-
-        let expressions = {
-            interpret: function(context){
-                for(let e of expression){
-                    e.interpret(context);
-                }
-                return context.current;
-            }
-        }
-
-        return expressions;
-    }
-}
-
-// var parser = new Parser();
-// var expression = parser.parse('div(.Top&.fa-icon)>strong');
-// console.log(expression);
 
 axios.get("https://www3.animeflv.net").then((response) => {
     const dom = new JSDOM(response.data);
-    context = {
-        current: dom.window.document
-    };
 
-    var parser = new Parser();
-    var expression = parser.parse('div(.Top)>strong');
-    
-    expression.interpret(context);
+    const $ = cheerio.load(response.data);
 
-    console.log(dom.window.document.getElementsByClassName("Top")[0].children[0].textContent);
+    var childs = $('ul.ListEpisodios li a');
+
+    var animes = [];
+
+    for(let child of childs){
+        var url = child.attribs['href'];
+        var info = child.children;
+        var episodeNumber = info.find(c => 'attribs' in c && c.attribs['class'] === 'Capi').children[0].data;
+        var animeName = info.find(c => 'attribs' in c && c.attribs['class'] === 'Title').children[0].data;
+        animes.push(new AnimeEpisode(animeName, episodeNumber, `https://www3.animeflv.net${url}`));
+    }
+
+    console.log(animes);
+
 })
 
 class Scrapper {
