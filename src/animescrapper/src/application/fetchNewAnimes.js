@@ -12,6 +12,7 @@ module.exports = class FetchNewAnimes{
     fetch(){
         this.#scrapper.fetch().then(lastestAnimes =>{
             this.#animeRepository.save(lastestAnimes);
-        }); 
+        });
+
     }
 }
