@@ -1,6 +1,7 @@
 const cheerio = require('cheerio');
 const axios = require('axios');
 const AnimeEpisode = require('../domain/animeEpisode');
+const DateRetriever = require('../domain/date/dateRetriever');
 
 module.exports = class AnimeFlvScrapper{
 
@@ -24,7 +25,7 @@ module.exports = class AnimeFlvScrapper{
                     var episodeNumber = info.find(c => 'attribs' in c && c.attribs['class'] === 'Capi').children[0].data;
                     var animeName = info.find(c => 'attribs' in c && c.attribs['class'] === 'Title').children[0].data;
 
-                    animes.push(new AnimeEpisode(animeName, episodeNumber, `https://www3.animeflv.net${url}`, 'AnimeFLV', new Date()));
+                    animes.push(new AnimeEpisode(animeName, episodeNumber, `https://www3.animeflv.net${url}`, 'AnimeFLV', DateRetriever.getToday()));
                     
                 }
 

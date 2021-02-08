@@ -13,6 +13,7 @@
   "author": "dev4l3x",
   "license": "ISC",
   "dependencies": {
+    "amqplib": "^0.6.0",
     "axios": "^0.21.1",
     "cheerio": "^1.0.0-rc.5",
     "dotenv": "^8.2.0",

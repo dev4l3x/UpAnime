@@ -9,10 +9,8 @@ module.exports = class FetchNewAnimes{
         this.#animeRepository = animeRepository;
     }
 
-    fetch(){
-        this.#scrapper.fetch().then(lastestAnimes =>{
-            this.#animeRepository.save(lastestAnimes);
-        });
-
+    async fetch(){
+        var lastestAnimes = await this.#scrapper.fetch();
+        await this.#animeRepository.save(lastestAnimes);
     }
 }
