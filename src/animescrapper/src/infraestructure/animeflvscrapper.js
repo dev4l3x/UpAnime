@@ -25,7 +25,7 @@ module.exports = class AnimeFlvScrapper{
                     var episodeNumber = info.find(c => 'attribs' in c && c.attribs['class'] === 'Capi').children[0].data;
                     var animeName = info.find(c => 'attribs' in c && c.attribs['class'] === 'Title').children[0].data;
 
-                    animes.push(new AnimeEpisode(animeName, episodeNumber, `https://www3.animeflv.net${url}`, 'AnimeFLV', DateRetriever.getToday()));
+                    animes.push(new AnimeEpisode(animeName, episodeNumber, `https://www3.animeflv.net${url}`, 'AnimeFLV'));
                     
                 }
 

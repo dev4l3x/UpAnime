@@ -11,6 +11,6 @@ module.exports = class FetchNewAnimes{
 
     async fetch(){
         var lastestAnimes = await this.#scrapper.fetch();
-        await this.#animeRepository.save(lastestAnimes);
+        return lastestAnimes;
     }
 }

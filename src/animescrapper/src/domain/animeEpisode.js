@@ -4,13 +4,11 @@ module.exports = class AnimeEpisode {
     number;
     url;
     site;
-    addedDate; 
 
-    constructor(name, number, url, site, addedDate){
+    constructor(name, number, url, site){
         this.animeName = name;
         this.number = number;
         this.url = url;
         this.site = site;
-        this.addedDate = addedDate;
     }
 }
