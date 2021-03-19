@@ -15,7 +15,7 @@ module.exports = class RabbitMqNotifierService {
 
     
     async connect(){
-        this.#connection = await amqp.connect('amqp://localhost');
+        this.#connection = await amqp.connect('amqp://rabbit');
     }
 
     async createChannel(){
@@ -32,7 +32,7 @@ module.exports = class RabbitMqNotifierService {
         await this.createChannel();
         await this.configureExchange();
 
-        this.#channel.publish(this.EXCHANGE_NAME, '', Buffer.from(data));
+        this.#channel.publish(this.EXCHANGE_NAME, '', Buffer.from(JSON.stringify(data)));
         
     }
 

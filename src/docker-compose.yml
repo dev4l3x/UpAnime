@@ -6,10 +6,18 @@ services:
     ports: 
       - "15672:15672"
       - "5672:5672"
+    
+  
+  notifier:
+    build: ./animenotifier
+    ports: 
+      - "3000:3000"
+      - "9229:9229"
 
   scrapper:
     build: ./animescrapper
-    ports: 
-      - "3000:3000"
+    depends_on:
+      - "notifier"
+      - "rabbit"
   
   

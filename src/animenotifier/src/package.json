@@ -1,0 +1,14 @@
+{
+  "name": "animenotifier",
+  "version": "1.0.0",
+  "description": "An app to notify interested users about anime apisodes release ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "dev4l3x",
+  "license": "ISC",
+  "dependencies": {
+    "amqplib": "^0.7.1"
+  }
+}
