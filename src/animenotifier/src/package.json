@@ -9,6 +9,12 @@
   "author": "dev4l3x",
   "license": "ISC",
   "dependencies": {
-    "amqplib": "^0.7.1"
+    "amqplib": "^0.7.1",
+    "crypto": "^1.0.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.12.2",
+    "passport": "^0.4.1",
+    "passport-jwt": "^4.0.0",
+    "passport-local": "^1.0.0"
   }
 }
