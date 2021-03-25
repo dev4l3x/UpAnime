@@ -1,0 +1,16 @@
+html 
+    head 
+        title= "Register"
+    body 
+        style. 
+            form input { display: block }
+            form { margin-left: auto; margin-right: auto; width: fit-content; }
+            #login-button { margin-top: 5px; }
+
+        #form 
+            form(action="/register", method="post")
+                label(for="email") Email 
+                input#email(type="email", name="email")
+                label(for="password") Password
+                input#password(type="password", name="password") 
+                input#login-button(type="submit", value="Login")

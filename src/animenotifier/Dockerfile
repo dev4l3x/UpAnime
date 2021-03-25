@@ -1,8 +1,4 @@
-FROM ubuntu
-RUN apt-get update
-RUN apt-get install curl -y
-RUN curl -sL https://deb.nodesource.com/setup_15.x | bash -
-RUN apt-get install nodejs -y
+FROM node
 WORKDIR /usr/src/app
 COPY src/package*.json ./
 RUN npm install

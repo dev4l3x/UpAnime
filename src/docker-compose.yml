@@ -8,11 +8,18 @@ services:
       - "5672:5672"
     
   
+  mongonotifier:
+    image: "mongo"
+    ports: 
+      - "8081:8081"
+
   notifier:
     build: ./animenotifier
     ports: 
       - "3000:3000"
       - "9229:9229"
+    depends_on:
+      - "mongonotifier"
 
   scrapper:
     build: ./animescrapper
