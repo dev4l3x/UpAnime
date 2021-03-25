@@ -2,9 +2,8 @@ const express = require('express');
 const router = express.Router();
 
 const pug = require('pug');
-
-router.get('/', (req, res) => {
-    console.log(req.cookies['access-token']);
+const passport = require('passport');
+router.get('/', passport.authenticate('cookie'), (req, res) => {
     res.render('index', { title: 'Hey', message: 'Hello there!' });
 });
 

@@ -13,7 +13,7 @@ router.get('/login', (req, res) => {
 router.post('/login', passport.authenticate('local') ,(req, res) => {
     let token = jwt.sign({email: req.user.email}, "secretkey");
     
-    res.setHeader('Set-Cookie', `access-token=${token}`);
+    res.setHeader('Set-Cookie', `token=${token}`);
 
     res.render('index');
 });
