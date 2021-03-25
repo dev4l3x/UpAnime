@@ -5,13 +5,17 @@ const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const User = require('../../infraestructure/models/user');
 
+
+router.get('/login', (req, res) => {
+    res.render('login');
+});
+
 router.post('/login', passport.authenticate('local') ,(req, res) => {
     let token = jwt.sign({email: req.user.email}, "secretkey");
     
-    res.send({ 
-        access_token: token, 
-        exp: Math.floor(Date.now() / 1000) + (60 * 60)
-    });
+    res.setHeader('Set-Cookie', `access-token=${token}`);
+
+    res.render('index');
 });
 
 router.post('/register', (req, res) => {
