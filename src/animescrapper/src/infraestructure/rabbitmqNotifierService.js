@@ -12,9 +12,8 @@ module.exports = class RabbitMqNotifierService {
         
     }
 
-
-    
     async connect(){
+        debugger;
         this.#connection = await amqp.connect('amqp://rabbit');
     }
 
