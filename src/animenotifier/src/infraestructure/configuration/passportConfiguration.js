@@ -1,9 +1,16 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const CookieStrategy = require('passport-cookie').Strategy;
+const JwtStrategy = require('passport-jwt').Strategy;
+const ExtractJwt = require('passport-jwt').ExtractJwt;
 const User = require('../models/user');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
+
+var opts = {
+    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+    secretOrKey: 'secretkey', 
+}
 
 module.exports = function(){
     passport.use(new LocalStrategy(
@@ -29,6 +36,15 @@ module.exports = function(){
     
         }
     ));
+
+    passport.use(new JwtStrategy(opts, async function(jwtPayload, done){
+        const user = await User.findOne({email: jwtPayload.email});
+        if(!user){
+            done(null, false);
+        }
+
+        done(null, user);
+    }))
     
 
     passport.use(new CookieStrategy(

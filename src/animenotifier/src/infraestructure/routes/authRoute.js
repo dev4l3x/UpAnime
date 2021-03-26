@@ -12,13 +12,7 @@ router.get('/login', (req, res) => {
 
 router.post('/login', passport.authenticate('local') ,(req, res) => {
     let token = jwt.sign({email: req.user.email}, "secretkey");
-    
-    res.setHeader('Set-Cookie', `token=${token}`);
-    res.redirect('/');
-});
-
-router.get('/register', (req, res) => {
-   res.render('register'); 
+    res.send({ access_token: token });
 });
 
 router.post('/register', (req, res) => {

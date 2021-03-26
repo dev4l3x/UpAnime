@@ -3,6 +3,7 @@ const ReceiverService = require('./infraestructure/rabbitmqReceiverService');
 const express = require('express');
 const authRoutes = require('./infraestructure/routes/authRoute');
 const homeRoutes = require('./infraestructure/routes/homeRoute');
+const tagsRoutes = require('./infraestructure/routes/tagsRoute');
 const path = require('path');
 
 const app = express();
@@ -21,6 +22,7 @@ receiver.on((message) => {
 
 app.use(authRoutes);
 app.use(homeRoutes);
+app.use(tagsRoutes);
 
 app.listen(port, () => {
     console.log(`Listening on port ${port}`);

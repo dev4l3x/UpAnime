@@ -2,4 +2,19 @@ html
     head 
         title= "Anime" 
     body 
-        h1= "Hello"
+        
+        h1= message 
+        input#tags(type="text")
+        button#addtag(value="Add tag")= "Add tag"
+        ul#taglist 
+            li= "test" 
+        form#tagshiddenform(action="/tags", method="post") 
+
+        script.
+            document.getElementById('addtag').onclick = function(){
+                let tag = document.getElementById('tags').value;
+                let list = document.getElementById('taglist');
+                let li = document.createElement('li');
+                li.textContent = tag;
+                list.appendChild(li);
+            }

@@ -4,4 +4,4 @@ COPY src/package*.json ./
 RUN npm install
 COPY src/. ./
 EXPOSE 3000
-CMD ["node", "--inspect-brk=0.0.0.0", "index.js"]
+CMD ["node", "--inspect=0.0.0.0", "index.js"]
