@@ -14,6 +14,7 @@ require('./infraestructure/configuration/mongooseConfiguration')();
 require('./infraestructure/configuration/expressConfiguration')(app);
 require('./infraestructure/configuration/passportConfiguration')();
 app.set('views', path.join(__dirname, '/templates'));
+
 const receiver = new ReceiverService();
 receiver.on((message) => {
     console.log(message);
