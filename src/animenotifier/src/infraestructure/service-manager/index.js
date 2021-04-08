@@ -1,4 +1,7 @@
 module.exports = class ServiceManager {
+
+    app_dir = process.cwd();
+
     constructor(){
         
     }
