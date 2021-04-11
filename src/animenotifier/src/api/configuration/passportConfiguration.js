@@ -3,13 +3,16 @@ const LocalStrategy = require('passport-local').Strategy;
 const CookieStrategy = require('passport-cookie').Strategy;
 const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
-const User = require('../models/user');
+const User = require('../../infraestructure/schemas/user');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
+const config = require('./../../infraestructure/configuration-manager');
+
+const secret_key = config.getConfig('SECRET_KEY') ?? 'secretkey'; 
 
 var opts = {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-    secretOrKey: 'secretkey', 
+    secretOrKey: secret_key, 
 }
 
 module.exports = function(){

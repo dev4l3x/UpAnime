@@ -1,29 +1,26 @@
 
 const amqp = require('amqplib');
-module.exports = class RabbitMqReceiverService {
 
-    #connection;
-    #channel;
-    #queue; 
+let connection, channel, queue;
+const EXCHANGE_NAME = 'animes';
 
-    EXCHANGE_NAME = 'animes';
+async function _connect(){
+    connection = await amqp.connect('amqp://rabbit');
+    channel = await connection.createChannel();
+    channel.assertExchange(EXCHANGE_NAME, 'fanout', {
+        durable: true
+    });
 
-    async prepare(){
-        this.#connection = await amqp.connect('amqp://rabbit');
-        this.#channel = await this.#connection.createChannel();
-        this.#channel.assertExchange(this.EXCHANGE_NAME, 'fanout', {
-            durable: true
-        });
+    queue = await this.channel.assertQueue('', { exclusive: false });
 
-        this.#queue = await this.#channel.assertQueue('', { exclusive: false });
-
-        this.#channel.bindQueue(this.#queue.queue, this.EXCHANGE_NAME, '');
-    }
-
-    async on(callback){
-        await this.prepare();
-        this.#channel.consume(this.#queue.queue, function(message){
-            callback(message.content.toString());
-        });
-    }
+    channel.bindQueue(queue.queue, EXCHANGE_NAME, '');
 }
+
+async function onReceive(callback){
+    await _connect();
+    channel.consume(queue, (message) => {callback(message.content.toString())});
+}
+
+
+
+module.exports = { on: onReceive };

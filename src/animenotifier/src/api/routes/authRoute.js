@@ -3,7 +3,7 @@ const router = express.Router();
 const crypto = require('crypto');
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
-const User = require('../../infraestructure/models/user');
+const User = require('../../infraestructure/schemas/user');
 
 
 router.get('/login', (req, res) => {

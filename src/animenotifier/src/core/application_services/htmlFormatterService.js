@@ -1,8 +1,14 @@
 const pug = require('pug');
 const path = require('path');
 
-module.exports = class HtmlFormatterService{
-    format(animes){
-        return pug.renderFile(path.join(process.cwd(), 'templates/animeEmail.pug'), {animes});
-    }
+const formatter = {};
+
+formatter.format = function(animes){
+    return pug.renderFile(path.join(process.cwd(), 'templates/animeEmail.pug'), {animes});
+}
+
+
+
+module.exports = function(){
+    return formatter;
 }

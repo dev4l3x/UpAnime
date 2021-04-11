@@ -1,35 +1,28 @@
 
-const ReceiverService = require('./infraestructure/rabbitmqReceiverService');
-const NotifyAnimesToUsers = require('./application/notifyAnimesToUsers');
-const UserRepository = require('./infraestructure/userRepository');
+const receiverService = require('./infraestructure/services/rabbitmqReceiverService');
+const getUserRepo = require('./infraestructure/repositories/userRepository');
 
 const express = require('express');
-const authRoutes = require('./infraestructure/routes/authRoute');
-const homeRoutes = require('./infraestructure/routes/homeRoute');
-const tagsRoutes = require('./infraestructure/routes/tagsRoute');
+const authRoutes = require('./api/routes/authRoute');
+const homeRoutes = require('./api/routes/homeRoute');
+const tagsRoutes = require('./api/routes/tagsRoute');
+const config = require('./infraestructure/configuration-manager');
 const path = require('path');
 
 const app = express();
-const port = 3000;
+const port = config.getConfig('EXPRESS_PORT') ?? 3000;
 
 
-require('./infraestructure/configuration/mongooseConfiguration')();
-require('./infraestructure/configuration/expressConfiguration')(app);
-require('./infraestructure/configuration/passportConfiguration')();
+require('./api/configuration/mongooseConfiguration')();
+require('./api/configuration/expressConfiguration')(app);
+require('./api/configuration/passportConfiguration')();
+
 app.set('views', path.join(__dirname, '/templates'));
 
-const receiver = new ReceiverService();
-const notifier = new NotifyAnimesToUsers(new UserRepository());
+const createNotifier = require('./core/application_services/notifyAnimesToUsers');
+const getFormatter = require('./core/application_services/htmlFormatterService');
 
-notifier.notify([{
-    animeName: "One piece",
-    number: 23,
-    site: "AnimeFLV"
-}]).then(result => {
-    console.log(result);
-});
-
-
+const notifier = createNotifier({userRepository: getUserRepo(), formatter: getFormatter()});
 
 app.use(authRoutes);
 app.use(homeRoutes);
@@ -39,7 +32,7 @@ app.listen(port, () => {
     console.log(`Listening on port ${port}`);
 })
 
-receiver.on((message) => {
+receiverService.on((message) => {
     console.log(message);
     notifier.notify(JSON.parse(message)).then(result => {
         console.log(result);
